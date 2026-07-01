@@ -41,7 +41,11 @@ This matters, so it is worth being plain about:
 - It does **not** read your open files, your repository, your environment, or anything else on your machine. The tool takes one argument (a URL) and has no filesystem access.
 - The scan runs on Tin's servers, not locally. The findings come straight from that scan. This server only formats them.
 
-The code here is the whole client. Read it (`lib/scan.ts` is the part that talks to the backend).
+### What we measure
+
+To run and improve the tool (and, yes, to understand who finds it useful), we record product analytics via PostHog: the domain you scan and the scan's results, your coarse location (from IP), and your Cursor client version. We do not sell this data or use it to train models. Analytics is off unless a PostHog key is configured (`lib/analytics.ts`). It never includes anything from your machine, because the tool never sees anything from your machine other than the URL you type.
+
+The code here is the whole client. Read it (`lib/scan.ts` talks to the backend, `lib/analytics.ts` is exactly what we measure).
 
 ## How it works
 

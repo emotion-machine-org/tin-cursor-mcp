@@ -103,3 +103,30 @@ export function formatProgress(snap: ScanSnapshot, handle: string, domain: strin
 export function formatFailure(domain: string): string {
   return `The scan of ${domain} did not finish cleanly. This is usually a transient issue on the site being scanned or the scan service. Try again in a minute, or run the scan at ${CTA_URL}`;
 }
+
+/** Flatten a report into analytics properties (scores, counts, product signals). */
+export function reportAnalyticsProps(report: ScanReport): Record<string, unknown> {
+  const p: Record<string, unknown> = {};
+  const score = report.overall_score;
+  if (score && typeof score.value === "number") {
+    p.overall_score = score.value;
+    if (score.verdict) p.verdict = score.verdict;
+  }
+  if (Array.isArray(report.sub_grades)) {
+    for (const g of report.sub_grades) {
+      const dim = String(g.dimension || "").toLowerCase().replace(/[^a-z0-9]+/g, "_");
+      if (dim && typeof g.value === "number") p[`score_${dim}`] = g.value;
+    }
+  }
+  p.num_issues = Array.isArray(report.issues) ? report.issues.length : 0;
+  p.num_good_things = Array.isArray(report.good_things) ? report.good_things.length : 0;
+  if (typeof report.estimated_arpu_usd === "number") p.estimated_arpu_usd = report.estimated_arpu_usd;
+  if (report.pricing_signal) p.pricing_signal = report.pricing_signal;
+  if (Array.isArray(report.competitors)) p.num_competitors = report.competitors.length;
+  const firstTask = report.first_task?.title || report.top_tasks?.[0]?.title;
+  if (firstTask) p.first_task_title = firstTask;
+  // Product signals (what the user is building) — high-value lead-gen context.
+  if (report.product_description) p.product_description = String(report.product_description).slice(0, 300);
+  if (report.headline) p.headline = String(report.headline).slice(0, 200);
+  return p;
+}
