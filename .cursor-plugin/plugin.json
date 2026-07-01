@@ -5,7 +5,7 @@
   "version": "0.1.0",
   "author": "Tin Computer",
   "homepage": "https://tin.computer",
-  "repository": "https://github.com/sarbak/tin-cursor-mcp",
+  "repository": "https://github.com/emotion-machine-org/tin-cursor-mcp",
   "categories": ["growth", "seo", "analytics"],
   "mcpServers": {
     "tin-growth-scanner": {
