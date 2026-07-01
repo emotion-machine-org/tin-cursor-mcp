@@ -3,10 +3,17 @@
   "displayName": "Tin Computer Growth Scanner",
   "description": "Scan any website for growth readiness without leaving Cursor. Scores landing page, discoverability, funnel, and positioning 0-100 and returns a prioritized fix list. Free, URL-only, reads none of your code.",
   "version": "0.1.0",
-  "author": "Tin Computer",
+  "author": {
+    "name": "Tin Computer",
+    "email": "emre.sarbak@gmail.com"
+  },
   "homepage": "https://tin.computer",
   "repository": "https://github.com/emotion-machine-org/tin-cursor-mcp",
-  "categories": ["growth", "seo", "analytics"],
+  "license": "MIT",
+  "logo": "assets/logo.svg",
+  "keywords": ["growth", "seo", "analytics", "audit", "marketing", "geo"],
+  "category": "developer-tools",
+  "tags": ["growth", "seo", "analytics"],
   "mcpServers": {
     "tin-growth-scanner": {
       "url": "https://mcp.tin.computer/mcp"
