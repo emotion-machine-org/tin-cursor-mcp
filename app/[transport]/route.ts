@@ -18,7 +18,6 @@ import {
   toDomain,
 } from "../../lib/scan";
 import { formatReport, formatProgress, formatFailure } from "../../lib/format";
-import { checkScanLimit } from "../../lib/ratelimit";
 import { track } from "../../lib/analytics";
 
 export const runtime = "nodejs";
@@ -59,9 +58,10 @@ const handler = createMcpHandler(
           return text(`That does not look like a valid URL: "${url}". Try something like https://acme.com`);
         }
 
+        // Abuse / cost control lives on the control plane (the scan endpoint owns
+        // the rate limit, since that is where the expensive work runs). Here we
+        // only derive an IP to use as the analytics distinct id.
         const ip = ipFrom(extra);
-        const limit = await checkScanLimit(ip);
-        if (!limit.ok) return text(limit.reason ?? "Rate limit reached.");
 
         let started;
         try {

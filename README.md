@@ -71,8 +71,7 @@ Deploys to Vercel as-is (`app/[transport]/route.ts` is the MCP endpoint). Set th
 
 ## Guardrails
 
-- **Rate limiting** (`lib/ratelimit.ts`): per-IP sliding window plus a global ceiling, backed by Upstash Redis. Env-gated, so the server runs without it in dev.
-- **Cost control**: only starting a scan is rate limited; reads are cheap. The backend also deduplicates by domain, so re-scanning the same site reuses a recent result instead of re-running.
+- **Rate limiting / cost control**: enforced on the control plane, at the scan endpoint itself, since that is where the expensive work runs (per IP and per source). The backend also deduplicates by domain, so re-scanning the same site reuses a recent result instead of re-running the whole scan.
 - **Honest output** (`lib/format.ts`): findings are capped at five, prioritized. Every number shown comes from the scan. The formatter never invents a metric.
 - **Untrusted input**: the tool takes a URL and nothing else, so there is no path from a scanned page's content into your machine or your agent's instructions.
 
