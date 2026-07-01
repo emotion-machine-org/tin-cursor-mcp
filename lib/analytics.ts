@@ -15,7 +15,9 @@ const host = process.env.POSTHOG_HOST || "https://us.i.posthog.com";
 
 let client: PostHog | null = null;
 if (key) {
-  client = new PostHog(key, { host, flushAt: 1, flushInterval: 0 });
+  // disableGeoip defaults to true in posthog-node; turn it off so PostHog enriches
+  // country/region/city from the $ip we attach.
+  client = new PostHog(key, { host, flushAt: 1, flushInterval: 0, disableGeoip: false });
 }
 
 export interface TrackContext {
