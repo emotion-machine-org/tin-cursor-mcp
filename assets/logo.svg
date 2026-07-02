@@ -1,9 +1,5 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-label="Tin Computer Growth Scanner">
-  <rect width="128" height="128" rx="28" fill="#66DC9D"/>
-  <g fill="none" stroke="#0B3D2E" stroke-width="7" stroke-linecap="round">
-    <circle cx="64" cy="64" r="30"/>
-    <circle cx="64" cy="64" r="15"/>
-    <path d="M64 20 v14 M64 94 v14 M20 64 h14 M94 64 h14"/>
-  </g>
-  <circle cx="64" cy="64" r="5" fill="#0B3D2E"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-label="Tin Computer">
+  <rect width="128" height="128" fill="#080808"/>
+  <rect x="30" y="34" width="68" height="14" fill="#F5F1E6"/>
+  <rect x="57" y="34" width="14" height="62" fill="#F5F1E6"/>
 </svg>
