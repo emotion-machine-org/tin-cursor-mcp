@@ -120,14 +120,21 @@ export async function pollUntilDone(
 }
 
 // Stateless handle: we cannot keep the reader_token in memory across serverless
-// invocations, so we hand the agent a self-contained token that encodes both ids.
-export function encodeHandle(submissionId: string, readerToken: string): string {
-  return Buffer.from(`${submissionId}:${readerToken}`, "utf8").toString("base64url");
+// invocations, so we hand the agent a self-contained token that encodes both ids
+// plus the original domain (so a later get_growth_scan poll can label the report
+// correctly without guessing from report content).
+export function encodeHandle(submissionId: string, readerToken: string, domain: string): string {
+  return Buffer.from(`${submissionId}:${readerToken}:${domain}`, "utf8").toString("base64url");
 }
 
-export function decodeHandle(handle: string): { submissionId: string; readerToken: string } {
+export function decodeHandle(handle: string): { submissionId: string; readerToken: string; domain: string } {
   const decoded = Buffer.from(handle, "base64url").toString("utf8");
-  const idx = decoded.indexOf(":");
-  if (idx === -1) throw new Error("Malformed scan handle");
-  return { submissionId: decoded.slice(0, idx), readerToken: decoded.slice(idx + 1) };
+  const first = decoded.indexOf(":");
+  const second = first === -1 ? -1 : decoded.indexOf(":", first + 1);
+  if (first === -1 || second === -1) throw new Error("Malformed scan handle");
+  return {
+    submissionId: decoded.slice(0, first),
+    readerToken: decoded.slice(first + 1, second),
+    domain: decoded.slice(second + 1),
+  };
 }
