@@ -107,7 +107,7 @@ const handler = createMcpHandler(
         );
 
         const snap = await pollUntilDone(started.submissionId, started.readerToken, POLL_BUDGET_MS);
-        const handle = encodeHandle(started.submissionId, started.readerToken);
+        const handle = encodeHandle(started.submissionId, started.readerToken, domain);
         const duration_ms = Date.now() - t0;
 
         if (snap.status === "completed" && snap.report) {
@@ -160,17 +160,17 @@ const handler = createMcpHandler(
         if (snap.status === "completed" && snap.report) {
           const reportProps = reportAnalyticsProps(snap.report);
           await track("cursor_mcp_scan_completed", ip, { via: "poll", ...reportProps, ...client }, ctx);
-          return text(formatReport(snap.report, snap.report.headline || "your site"));
+          return text(formatReport(snap.report, ids.domain));
         }
         if (snap.status === "failed" || snap.status === "error") {
           await track("cursor_mcp_scan_failed", ip, { reason: "scan_failed", via: "poll", ...client }, ctx);
-          return text(formatFailure("your site"));
+          return text(formatFailure(ids.domain));
         }
         if (isTerminal(snap.status)) {
           return text("The scan finished but no report was produced. Try running scan_growth again.");
         }
         await track("cursor_mcp_scan_polled", ip, { tasks_completed: snap.tasksCompleted, tasks_total: snap.tasksTotal, ...client }, ctx);
-        return text(formatProgress(snap, handle, "your site"));
+        return text(formatProgress(snap, handle, ids.domain));
       },
     );
   },
